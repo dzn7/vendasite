@@ -70,6 +70,11 @@ module.exports = async function handler(req, res) {
 
     // Boleto: gera boleto e retorna linha digitável e URL
     if (method === 'boleto' || method === 'bolbradesco') {
+      // Guard: CPF is required for boleto in BR
+      const identification = body?.payer?.identification;
+      if (!identification || !identification.number) {
+        return res.status(400).json({ error: 'missing_cpf', message: 'CPF é obrigatório para boleto.' });
+      }
       const boletoData = {
         transaction_amount: amountBase,
         payment_method_id: 'bolbradesco',
@@ -78,7 +83,7 @@ module.exports = async function handler(req, res) {
           email: body?.payer?.email,
           first_name: body?.payer?.first_name,
           last_name: body?.payer?.last_name,
-          identification: body?.payer?.identification
+          identification
         }
       };
       const result = await paymentClient.create({ body: boletoData });
@@ -122,7 +127,14 @@ module.exports = async function handler(req, res) {
       point_of_interaction: result.point_of_interaction || null
     });
   } catch (e) {
-    console.error('Payment error', e);
-    return res.status(500).json({ error: 'payment_failed' });
+    // Improve visibility into MP SDK errors
+    const status = e?.status || 500;
+    const payload = {
+      error: 'payment_failed',
+      message: e?.message || 'unknown_error',
+      cause: e?.cause || e?.error || null
+    };
+    console.error('Payment error', payload, e);
+    return res.status(status).json(payload);
   }
 };
