@@ -173,27 +173,42 @@
           <div class="mt-6">
             <p class="text-sm font-medium text-slate-200 mb-3">Forma de Pagamento</p>
             <div class="grid grid-cols-3 gap-3" role="tablist" aria-label="Payment Methods">
-              <button id="tab-pix" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 data-[active=true]:border-cyan-500 data-[active=true]:bg-cyan-500/10" data-active="true">Pix</button>
-              <button id="tab-cartao" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200">Cartão</button>
+              <button id="tab-pix" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 data-[active=true]:border-cyan-500 data-[active=true]:bg-cyan-500/10">Pix</button>
+              <button id="tab-cartao" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200" data-active="true">Cartão</button>
               <button id="tab-boleto" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200">Boleto</button>
             </div>
 
             <!-- Pix -->
-            <div id="pane-pix" class="mt-4">
-              <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4 flex items-center justify-between">
+            <div id="pane-pix" class="mt-4 hidden">
+              <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4">
                 <div class="flex items-start gap-3">
                   <svg class="w-5 h-5 text-emerald-400 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2.75 2.75 0 011.95.81l6.29 6.28a2.75 2.75 0 010 3.89l-6.29 6.29a2.75 2.75 0 01-3.89 0L3.71 13a2.75 2.75 0 010-3.89L10 2.81A2.75 2.75 0 0112 2z"/></svg>
-                  <div>
-                    <p class="text-slate-100 font-semibold">Pagamento instantâneo</p>
-                    <p class="text-slate-400 text-sm">Aprovação em segundos via Pix. QR Code gerado após clicar em comprar.</p>
+                  <div class="flex-1">
+                    <p class="font-medium text-slate-100">Pague via Pix (no site)</p>
+                    <p class="text-sm text-slate-400">Clique em "Comprar agora" para gerar o QR Code aqui mesmo. Copie o código Pix ou escaneie o QR.</p>
                   </div>
                 </div>
-                <img alt="Pix" src="https://upload.wikimedia.org/wikipedia/commons/0/04/Logo_Pix_branco.png" class="h-6 opacity-80 hidden sm:block" />
+                <div id="pix-qr-area" class="mt-4 hidden">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                    <div class="md:col-span-1">
+                      <img id="pix-qr-img" alt="QR Code Pix" class="w-48 h-48 bg-slate-900/40 rounded-lg border border-white/10 p-2" />
+                    </div>
+                    <div class="md:col-span-2">
+                      <label class="block text-sm font-medium text-slate-200 mb-2">Código Pix Copia e Cola</label>
+                      <textarea id="pix-qr-code" class="w-full h-28 rounded-lg bg-slate-900/60 border border-white/10 p-3 text-slate-100 text-sm" readonly></textarea>
+                      <div class="mt-2 flex gap-2">
+                        <button id="pix-copy-btn" class="px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs">Copiar código</button>
+                        <a id="pix-ticket-link" href="#" target="_blank" class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs">Abrir página do pagamento</a>
+                      </div>
+                      <p class="mt-2 text-xs text-slate-400">Após o pagamento ser confirmado, seu acesso é liberado automaticamente.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             <!-- Cartão -->
-            <div id="pane-cartao" class="mt-4 hidden">
+            <div id="pane-cartao" class="mt-4">
               <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4">
                 <p class="text-slate-100 font-semibold mb-2">Pagar com Cartão (sem sair do site)</p>
                 <div id="mp-card-brick" class="bg-slate-900/40 rounded-lg p-3"></div>
@@ -204,8 +219,17 @@
             <!-- Boleto -->
             <div id="pane-boleto" class="mt-4 hidden">
               <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4">
-                <p class="text-slate-100 font-semibold">Pagamento por Boleto</p>
-                <p class="text-slate-400 text-sm mt-1">O boleto é gerado após clicar em comprar. Compensação em até 2 dias úteis.</p>
+                <p class="text-slate-100 font-semibold">Pagamento por Boleto (no site)</p>
+                <p class="text-slate-400 text-sm mt-1">Clique em "Comprar agora" para gerar o boleto aqui. A compensação pode levar até 2 dias úteis.</p>
+                <div id="boleto-area" class="mt-4 hidden">
+                  <label class="block text-sm font-medium text-slate-200 mb-2">Linha digitável</label>
+                  <textarea id="boleto-barcode" class="w-full h-20 rounded-lg bg-slate-900/60 border border-white/10 p-3 text-slate-100 text-sm" readonly></textarea>
+                  <div class="mt-2 flex gap-2">
+                    <button id="boleto-copy-btn" class="px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs">Copiar linha</button>
+                    <a id="boleto-link" href="#" target="_blank" class="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs">Abrir boleto</a>
+                  </div>
+                  <p class="mt-2 text-xs text-slate-400">Você também receberá o boleto por e-mail, se informado.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -612,10 +636,22 @@
           pane.classList.toggle('hidden', !active);
         });
       };
+      // Debounce helper
+      let reinitTmr = null;
+      function debounceReinit(){
+        clearTimeout(reinitTmr);
+        reinitTmr = setTimeout(()=>{
+          const isCard = document.getElementById('tab-cartao')?.dataset.active === 'true';
+          if (isCard) initCardBrick();
+        }, 250);
+      }
+
       ['pix','cartao','boleto'].forEach(t => {
         const el = document.getElementById('tab-' + t);
-        if (el) el.addEventListener('click', () => setActive(t));
+        if (el) el.addEventListener('click', () => { setActive(t); if (t === 'cartao') initCardBrick(); });
       });
+      // Garante Cartão como padrão na carga
+      setActive('cartao');
 
       // Inicializa Mercado Pago Bricks (Cartão no-site)
       let cardBrickController = null;
@@ -631,7 +667,7 @@
             initialization: { amount: currentPriceValue },
             customization: {
               visual: { style: { theme: 'dark' } },
-              paymentMethods: { maxInstallments: 12 },
+              paymentMethods: { maxInstallments: 24 },
               hidePaymentButton: true
             },
             callbacks: {
@@ -668,6 +704,13 @@
       // Inicia o brick após um pequeno delay para garantir DOM pronto
       setTimeout(initCardBrick, 500);
 
+      // Reinit brick quando o preço muda (aplicar/remover cupom)
+      const _applyPrice = applyPrice;
+      applyPrice = function(p){
+        _applyPrice(p);
+        debounceReinit();
+      }
+
       // Ano rodapé
       const y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
@@ -703,13 +746,98 @@
           console.error(e);
         }
       }
-      if (btn) btn.addEventListener('click', async () => {
-        const isCard = document.getElementById('tab-cartao')?.dataset.active === 'true';
-        if (isCard && cardBrickController) {
-          try { await cardBrickController.submit(); } catch (e) { console.error(e); }
-        } else {
-          await createPreferenceAndRedirect();
+      async function createPixPaymentInline(){
+        try {
+          const email = document.getElementById('email')?.value || '';
+          const payload = {
+            payment_method_id: 'pix',
+            transaction_amount: currentPriceValue,
+            description: 'Guia Premium de Investimentos',
+            payer: { email }
+          };
+          const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          const data = await resp.json();
+          if (!resp.ok) { alert('Erro ao gerar Pix.'); return; }
+          const area = document.getElementById('pix-qr-area');
+          const img = document.getElementById('pix-qr-img');
+          const code = document.getElementById('pix-qr-code');
+          const link = document.getElementById('pix-ticket-link');
+          if (data.qr_code_base64) img.src = 'data:image/png;base64,' + data.qr_code_base64; else img.removeAttribute('src');
+          if (data.qr_code) code.value = data.qr_code; else code.value = '';
+          if (data.ticket_url) { link.href = data.ticket_url; link.classList.remove('hidden'); } else { link.href = '#'; link.classList.add('hidden'); }
+          area.classList.remove('hidden');
+          area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {
+          console.error('Pix create error', e);
+          alert('Erro ao gerar QR Pix.');
         }
+      }
+
+      // copiar código pix
+      document.addEventListener('click', (ev) => {
+        if (ev.target && ev.target.id === 'pix-copy-btn') {
+          const el = document.getElementById('pix-qr-code');
+          if (el) { el.select(); document.execCommand?.('copy'); navigator.clipboard?.writeText(el.value); }
+        }
+      });
+
+      async function createBoletoPaymentInline(){
+        try {
+          const email = document.getElementById('email')?.value || '';
+          const payerName = (document.getElementById('nome')?.value || '').trim();
+          const [first_name, ...rest] = payerName.split(' ');
+          const last_name = rest.join(' ');
+          const payload = {
+            payment_method_id: 'bolbradesco',
+            transaction_amount: currentPriceValue,
+            description: 'Guia Premium de Investimentos',
+            payer: { email, first_name, last_name }
+          };
+          const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          const data = await resp.json();
+          if (!resp.ok) { alert('Erro ao gerar boleto.'); return; }
+          const area = document.getElementById('boleto-area');
+          const code = document.getElementById('boleto-barcode');
+          const link = document.getElementById('boleto-link');
+          if (data.barcode) code.value = data.barcode; else code.value = '';
+          if (data.ticket_url) { link.href = data.ticket_url; link.classList.remove('hidden'); } else { link.href = '#'; link.classList.add('hidden'); }
+          area.classList.remove('hidden');
+          area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {
+          console.error('Boleto create error', e);
+          alert('Erro ao gerar boleto.');
+        }
+      }
+
+      // copiar boleto linha digitável
+      document.addEventListener('click', (ev) => {
+        if (ev.target && ev.target.id === 'boleto-copy-btn') {
+          const el = document.getElementById('boleto-barcode');
+          if (el) { el.select(); document.execCommand?.('copy'); navigator.clipboard?.writeText(el.value); }
+        }
+      });
+
+      if (btn) btn.addEventListener('click', async () => {
+        const tabEl = document.getElementById('tab-cartao');
+        const paneEl = document.getElementById('pane-cartao');
+        const isCard = (tabEl?.dataset.active === 'true') || tabEl?.classList?.contains('active') || !paneEl?.classList?.contains('hidden');
+        const isPix = !document.getElementById('pane-pix')?.classList?.contains('hidden');
+        const isBoleto = !document.getElementById('pane-boleto')?.classList?.contains('hidden');
+        if (isCard) {
+          try {
+            if (!cardBrickController) await initCardBrick();
+            if (cardBrickController) {
+              await cardBrickController.submit();
+              return;
+            }
+            alert('Preparei o pagamento com cartão. Tente novamente.');
+            return;
+          } catch (e) { console.error(e); alert('Não foi possível iniciar o pagamento com cartão.'); return; }
+        } else if (isPix) {
+          await createPixPaymentInline();
+          return;
+        } else if (isBoleto) { await createBoletoPaymentInline(); return; }
+        await createPreferenceAndRedirect();
       });
       // CTA mobile
       const btnm = document.getElementById('comprarAgoraMobile');

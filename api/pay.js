@@ -45,11 +45,65 @@ module.exports = async function handler(req, res) {
     const mp = new MercadoPagoConfig({ accessToken });
     const paymentClient = new Payment(mp);
 
+    const amountBase = Number(body.transaction_amount) || 297;
+    const method = (body.payment_method_id || '').toLowerCase();
+
+    // Pix: cria pagamento e retorna QR
+    if (method === 'pix') {
+      const pixData = {
+        transaction_amount: amountBase,
+        payment_method_id: 'pix',
+        description: body.description || 'Guia Premium de Investimentos',
+        payer: { email: body?.payer?.email }
+      };
+      const result = await paymentClient.create({ body: pixData });
+      const td = result?.point_of_interaction?.transaction_data || {};
+      return res.status(200).json({
+        id: result.id,
+        status: result.status,
+        status_detail: result.status_detail,
+        qr_code: td.qr_code || null,
+        qr_code_base64: td.qr_code_base64 || null,
+        ticket_url: td.ticket_url || null
+      });
+    }
+
+    // Boleto: gera boleto e retorna linha digitável e URL
+    if (method === 'boleto' || method === 'bolbradesco') {
+      const boletoData = {
+        transaction_amount: amountBase,
+        payment_method_id: 'bolbradesco',
+        description: body.description || 'Guia Premium de Investimentos',
+        payer: {
+          email: body?.payer?.email,
+          first_name: body?.payer?.first_name,
+          last_name: body?.payer?.last_name,
+          identification: body?.payer?.identification
+        }
+      };
+      const result = await paymentClient.create({ body: boletoData });
+      const td = result?.point_of_interaction?.transaction_data || {};
+      return res.status(200).json({
+        id: result.id,
+        status: result.status,
+        status_detail: result.status_detail,
+        barcode: td.barcode || null,
+        ticket_url: td.ticket_url || null
+      });
+    }
+
+    // Cartão: aplica juros 0,2% a.m. acima de 12 parcelas
+    const installments = Math.max(1, Math.min(24, Number(body.installments) || 1));
+    const monthlyRate = 0.002; // 0,2% ao mês
+    const adjustedAmount = installments > 12
+      ? Number((amountBase * Math.pow(1 + monthlyRate, installments)).toFixed(2))
+      : amountBase;
+
     const paymentData = {
-      transaction_amount: Number(body.transaction_amount) || 297,
+      transaction_amount: adjustedAmount,
       token: body.token,
       description: body.description || 'Guia Premium de Investimentos',
-      installments: Number(body.installments) || 1,
+      installments,
       payment_method_id: body.payment_method_id, // e.g. 'visa'
       issuer_id: body.issuer_id,
       statement_descriptor: 'GUIA PREMIUM',
