@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obrigado pela Compra - Invista Como um Especialista</title>
+    <link href="dist/output.css" rel="stylesheet">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .checkmark-circle {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .checkmark-circle .background {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #22c55e;
+            position: absolute;
+        }
+        .checkmark-circle .checkmark {
+            border-radius: 5px;
+        }
+        .checkmark-circle .checkmark.draw:after {
+            animation-duration: 1.2s;
+            animation-timing-function: ease;
+            animation-name: checkmark;
+            transform: scaleX(-1) rotate(135deg);
+            animation-fill-mode: forwards;
+        }
+        .checkmark-circle .checkmark:after {
+            opacity: 1;
+            height: 50px;
+            width: 25px;
+            transform-origin: left top;
+            border-right: 5px solid white;
+            border-top: 5px solid white;
+            content: '';
+            left: 25px;
+            top: 50px;
+            position: absolute;
+        }
+        @keyframes checkmark {
+            0% { height: 0; width: 0; opacity: 1; }
+            20% { height: 0; width: 25px; opacity: 1; }
+            40% { height: 50px; width: 25px; opacity: 1; }
+            100% { height: 50px; width: 25px; opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-purple-900 min-h-screen text-white">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl mx-auto text-center">
+            <!-- Animated Checkmark -->
+            <div class="checkmark-circle mx-auto mb-8">
+                <div class="background"></div>
+                <div class="checkmark draw"></div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Obrigado por sua Compra!</h1>
+            <p class="text-xl text-gray-300 mb-8">Seu pagamento foi aprovado e o acesso ao material foi liberado com sucesso.</p>
+            
+            <!-- Next Steps -->
+            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 mb-8 text-left max-w-md mx-auto">
+                <h2 class="text-2xl font-bold mb-4 text-yellow-400">📩 Confira seu e-mail</h2>
+                <p class="mb-6">Enviamos todos os detalhes do seu acesso para o e-mail cadastrado. Caso não encontre, verifique sua pasta de spam.</p>
+                
+                <h2 class="text-2xl font-bold mb-4 text-yellow-400">🎁 Bônus Exclusivo</h2>
+                <p class="mb-6">Como agradecimento, você recebeu acesso antecipado à nossa área de membros com materiais exclusivos.</p>
+                
+                <div class="bg-yellow-400/10 border-l-4 border-yellow-400 p-4 mb-6">
+                    <p class="font-medium">Dica do Especialista:</p>
+                    <p>Comece pelo módulo de fundamentos para construir uma base sólida nos seus investimentos.</p>
+                </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-yellow-500/20">
+                    ACESSAR ÁREA DO ALUNO
+                </a>
+                <a href="#" class="bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105">
+                    BAIXAR MATERIAL EM PDF
+                </a>
+            </div>
+            
+            <!-- Support -->
+            <div class="mt-12 pt-6 border-t border-white/10">
+                <p class="text-gray-400 mb-4">Precisa de ajuda?</p>
+                <a href="mailto:suporte@seusite.com" class="inline-flex items-center text-yellow-400 hover:text-yellow-300">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    suporte@seusite.com
+                </a>
+            </div>
+            
+            <!-- Footer -->
+            <div class="mt-16 text-sm text-gray-500">
+                <p>© 2023 Invista Como um Especialista. Todos os direitos reservados.</p>
+                <p class="mt-2">Desenvolvido por <span class="text-yellow-400">Seu Nome</span></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add confetti effect
+        function createConfetti() {
+            const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = -20 + 'px';
+                confetti.style.opacity = Math.random();
+                confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                confetti.style.zIndex = '9999';
+                
+                document.body.appendChild(confetti);
+                
+                // Animate
+                const animation = confetti.animate([
+                    { top: -20 + 'px', transform: 'rotate(0deg)' },
+                    { top: window.innerHeight + 'px', transform: 'rotate(360deg)' }
+                ], {
+                    duration: Math.random() * 3000 + 3000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)',
+                    delay: Math.random() * 2000
+                });
+                
+                // Remove after animation
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+        
+        // Trigger confetti when page loads
+        window.addEventListener('load', () => {
+            createConfetti();
+            // Trigger again every 2 seconds for 3 times
+            let count = 0;
+            const interval = setInterval(() => {
+                createConfetti();
+                count++;
+                if (count >= 3) clearInterval(interval);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+/* Estilos personalizados para melhorar a compatibilidade */
+
+/**
+ * Corrige a aparência de elementos de formulário
+ * Adiciona suporte cross-browser consistente
+ */
+input[type="email"],
+input[type="text"],
+input[type="checkbox"] {
+  /* Reset de aparência para navegadores */
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  
+  /* Garante cores consistentes na impressão */
+  -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+  
+  /* Estilos base */
+  display: inline-block;
+  background-color: #fff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  
+  /* Garante que o box-sizing seja consistente */
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/**
+ * Estilização específica para checkboxes
+ * Melhora a aparência e a acessibilidade
+ */
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-color: #3b82f6;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+/**
+ * Melhora o foco para acessibilidade
+ * Fornece feedback visual claro para navegação por teclado
+ */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  z-index: 1;
+  position: relative;
+}
+
+/* Remove o outline em elementos que não devem ter foco visual */
+button:focus:not(:focus-visible),
+[type="button"]:focus:not(:focus-visible),
+[type="reset"]:focus:not(:focus-visible),
+[type="submit"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Suporte para navegadores antigos */
+@supports not selector(:focus-visible) {
+  *:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+/**
+ * Corrige alinhamento vertical em elementos flex
+ * Garante comportamento consistente em diferentes navegadores
+ */
+.flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+}
+
+/* Estilos para o modal */
+.modal-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.modal-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.modal-exit {
+  opacity: 1;
+}
+
+.modal-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 200ms, transform 200ms;
+}
+
+/* Melhora a acessibilidade do menu móvel */
+@media (width <= 768px) {
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    transition: right 0.3s ease-in-out;
+    z-index: 40;
+  }
+  
+  .mobile-menu.open {
+    right: 0;
+  }
+}
+
+/* Melhora o contraste para acessibilidade */
+.text-gray-600 {
+  color: #4b5563;
+}
+
+/* Garante que os botões tenham um tamanho mínimo de toque para dispositivos móveis */
+button, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Estilo para o botão de fechar do modal */
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+/* Melhora a visibilidade do foco para navegação por teclado */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

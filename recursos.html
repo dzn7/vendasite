@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recursos do Guia</title>
+  <link rel="stylesheet" href="dist/output.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <h1 class="text-lg sm:text-xl font-bold">Recursos do Guia</h1>
+      <a href="guia_investimento_tailwind.html" class="text-sm text-blue-600 hover:underline">Voltar ao Guia</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-10">
+    <!-- Planejador de Metas -->
+    <section id="planejador" class="bg-white rounded-xl shadow p-4 sm:p-6">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-serif font-bold mb-1">Planejador de Metas</h2>
+          <p class="text-sm text-gray-600">Descubra o aporte mensal necessário para atingir uma meta financeira no prazo desejado.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
+          <span class="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
+          Beta
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium">Valor da Meta (R$)</label>
+            <input id="goal" type="number" min="0" step="0.01" class="w-full mt-1 border rounded-lg px-3 py-2" placeholder="ex.: 100000" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Valor Inicial (R$)</label>
+            <input id="initial" type="number" min="0" step="0.01" class="w-full mt-1 border rounded-lg px-3 py-2" placeholder="ex.: 10000" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium">Prazo (meses)</label>
+              <input id="months" type="number" min="1" step="1" class="w-full mt-1 border rounded-lg px-3 py-2" placeholder="ex.: 36" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Rentabilidade ao mês (%)</label>
+              <input id="rate" type="number" min="0" step="0.01" class="w-full mt-1 border rounded-lg px-3 py-2" placeholder="ex.: 0.8" />
+            </div>
+          </div>
+          <button id="calcPlanBtn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg">Calcular Aporte</button>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">Resultado</h3>
+          <p class="text-sm text-gray-600">Aporte mensal necessário:</p>
+          <p id="requiredContribution" class="text-3xl font-bold text-blue-600 mt-1">R$ 0,00</p>
+          <p id="resultNote" class="text-xs text-gray-500 mt-2">Preencha os campos e clique em calcular.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 overflow-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Mês</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Saldo Inicial</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Aporte</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Juros</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Saldo Final</th>
+            </tr>
+          </thead>
+          <tbody id="planTable" class="bg-white divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Controle de Aportes -->
+    <section id="controle" class="bg-white rounded-xl shadow p-4 sm:p-6">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-serif font-bold mb-1">Controle de Aportes</h2>
+          <p class="text-sm text-gray-600">Registre seus aportes mensais por categoria e exporte em CSV.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full">
+          <span class="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+          LocalStorage
+        </div>
+      </div>
+
+      <form id="addForm" class="grid md:grid-cols-5 gap-3 mt-4">
+        <input id="date" type="date" class="border rounded-lg px-3 py-2" required />
+        <input id="category" type="text" placeholder="Categoria" class="border rounded-lg px-3 py-2" required />
+        <input id="amount" type="number" min="0" step="0.01" placeholder="Valor (R$)" class="border rounded-lg px-3 py-2" required />
+        <input id="notes" type="text" placeholder="Notas (opcional)" class="border rounded-lg px-3 py-2 col-span-1 md:col-span-1" />
+        <button class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg">Adicionar</button>
+      </form>
+
+      <div class="mt-6 overflow-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Data</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Categoria</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Valor (R$)</th>
+              <th class="px-3 py-2 text-left font-medium text-gray-600">Notas</th>
+              <th class="px-3 py-2"></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="bg-white divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        <div class="text-sm text-gray-700">Total aportado: <span id="total" class="font-semibold">R$ 0,00</span></div>
+        <div class="flex gap-2">
+          <button id="exportCsv" class="bg-gray-700 hover:bg-black text-white font-medium px-4 py-2 rounded-lg">Exportar CSV</button>
+          <button id="clearAll" class="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg">Limpar Tudo</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Portfolio Tracker -->
+    <section id="portfolio" class="bg-white rounded-xl shadow p-4 sm:p-6">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-serif font-bold mb-1">Portfolio Tracker</h2>
+          <p class="text-sm text-gray-600">Registre seus ativos, acompanhe P/L total e a alocação por classe.</p>
+        </div>
+        <div class="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">Gráfico de Pizza</div>
+      </div>
+
+      <form id="pfForm" class="grid md:grid-cols-5 gap-3 mt-4">
+        <input id="pfTicker" type="text" placeholder="Ticker (ex.: PETR4)" class="border rounded-lg px-3 py-2" required />
+        <select id="pfClass" class="border rounded-lg px-3 py-2">
+          <option>Ação</option>
+          <option>FII</option>
+          <option>ETF</option>
+          <option>Renda Fixa</option>
+          <option>Exterior</option>
+          <option>Cripto</option>
+        </select>
+        <input id="pfQty" type="number" min="0" step="0.0001" placeholder="Quantidade" class="border rounded-lg px-3 py-2" required />
+        <input id="pfAvg" type="number" min="0" step="0.01" placeholder="Preço Médio (R$)" class="border rounded-lg px-3 py-2" required />
+        <input id="pfPrice" type="number" min="0" step="0.01" placeholder="Preço Atual (R$)" class="border rounded-lg px-3 py-2" required />
+        <button class="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded-lg md:col-span-5">Adicionar/Atualizar</button>
+      </form>
+
+      <div class="mt-6 grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 overflow-auto">
+          <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">Ticker</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">Classe</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">Qtd</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">PM</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">Preço</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">Valor</th>
+                <th class="px-3 py-2 text-left font-medium text-gray-600">P/L</th>
+                <th class="px-3 py-2"></th>
+              </tr>
+            </thead>
+            <tbody id="pfTable" class="bg-white divide-y divide-gray-100"></tbody>
+          </table>
+          <div class="mt-3 flex flex-wrap items-center gap-3 text-sm">
+            <span>Total: <b id="pfTotal">R$ 0,00</b></span>
+            <span>Lucro/Prejuízo: <b id="pfPL">R$ 0,00</b></span>
+            <button id="pfExport" class="ml-auto bg-gray-700 hover:bg-black text-white px-3 py-2 rounded">Exportar CSV</button>
+            <button id="pfClear" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded">Limpar</button>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">Alocação por Classe</h3>
+          <canvas id="allocChart" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Perfil de Risco -->
+    <section id="perfil" class="bg-white rounded-xl shadow p-4 sm:p-6">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="text-2xl font-serif font-bold mb-1">Perfil de Risco</h2>
+          <p class="text-sm text-gray-600">Responda 3 perguntas e receba uma alocação sugerida. Você pode aplicar no Planejador.</p>
+        </div>
+        <div class="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-full">Sugestão</div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mt-4">
+        <div class="space-y-4">
+          <label class="block text-sm">Horizonte de investimento
+            <select id="qHoriz" class="mt-1 w-full border rounded-lg px-3 py-2">
+              <option value="curto">Curto (até 2 anos)</option>
+              <option value="medio">Médio (3 a 5 anos)</option>
+              <option value="longo">Longo (5+ anos)</option>
+            </select>
+          </label>
+          <label class="block text-sm">Tolerância a perdas no mês
+            <select id="qLoss" class="mt-1 w-full border rounded-lg px-3 py-2">
+              <option value="baixa">Baixa (até 2%)</option>
+              <option value="media">Média (3-6%)</option>
+              <option value="alta">Alta (7%+)</option>
+            </select>
+          </label>
+          <label class="block text-sm">Conhecimento
+            <select id="qKnow" class="mt-1 w-full border rounded-lg px-3 py-2">
+              <option value="iniciante">Iniciante</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+            </select>
+          </label>
+          <button id="calcPerfil" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">Calcular Perfil</button>
+        </div>
+        <div class="md:col-span-2 bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">Alocação sugerida</h3>
+          <div id="allocSuggest" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm"></div>
+          <div class="mt-4 flex items-center gap-3">
+            <button id="applyPlanner" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Aplicar no Planejador</button>
+            <span id="applyNote" class="text-xs text-gray-600">Ajusta a taxa mensal estimada conforme perfil.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simuladores: Aposentadoria, Portabilidade, DCA vs Único -->
+    <section id="simuladores" class="bg-white rounded-xl shadow p-4 sm:p-6">
+      <h2 class="text-2xl font-serif font-bold mb-4">Simuladores</h2>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Aposentadoria -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">Aposentadoria (rendimento vs inflação)</h3>
+          <div class="space-y-2 text-sm">
+            <input id="retSalary" type="number" step="0.01" placeholder="Aporte mensal (R$)" class="w-full border rounded px-3 py-2" />
+            <input id="retYears" type="number" step="1" placeholder="Anos" class="w-full border rounded px-3 py-2" />
+            <input id="retRate" type="number" step="0.01" placeholder="Rentab. a.m. (%)" class="w-full border rounded px-3 py-2" />
+            <input id="retInfl" type="number" step="0.01" placeholder="Inflação a.m. (%)" class="w-full border rounded px-3 py-2" />
+            <button id="retCalc" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded">Calcular</button>
+          </div>
+          <canvas id="retChart" class="mt-3" height="140"></canvas>
+        </div>
+
+        <!-- Portabilidade -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">Portabilidade (Tesouro/Previdência)</h3>
+          <div class="space-y-2 text-sm">
+            <input id="portInitial" type="number" step="0.01" placeholder="Valor atual (R$)" class="w-full border rounded px-3 py-2" />
+            <input id="portFee" type="number" step="0.01" placeholder="Taxas/IR (%) sobre transferência" class="w-full border rounded px-3 py-2" />
+            <input id="portMonths" type="number" step="1" placeholder="Prazo (meses)" class="w-full border rounded px-3 py-2" />
+            <input id="portRateA" type="number" step="0.01" placeholder="Rentab. atual a.m. (%)" class="w-full border rounded px-3 py-2" />
+            <input id="portRateB" type="number" step="0.01" placeholder="Rentab. novo a.m. (%)" class="w-full border rounded px-3 py-2" />
+            <button id="portCalc" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded">Comparar</button>
+          </div>
+          <canvas id="portChart" class="mt-3" height="140"></canvas>
+        </div>
+
+        <!-- DCA vs Aporte Único -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">DCA vs. Aporte Único</h3>
+          <div class="space-y-2 text-sm">
+            <input id="dcaTotal" type="number" step="0.01" placeholder="Valor total a investir (R$)" class="w-full border rounded px-3 py-2" />
+            <input id="dcaMonths" type="number" step="1" placeholder="Meses" class="w-full border rounded px-3 py-2" />
+            <input id="dcaRate" type="number" step="0.01" placeholder="Rentab. a.m. (%)" class="w-full border rounded px-3 py-2" />
+            <button id="dcaCalc" class="w-full bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-3 py-2 rounded">Comparar</button>
+          </div>
+          <canvas id="dcaChart" class="mt-3" height="140"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto p-6 text-center text-xs text-gray-500">© Guia de Investimentos</footer>
+
+  <script>
+    // Utils
+    const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    // Planejador de Metas
+    function calcRequiredMonthly(goal, initial, months, monthlyRate) {
+      // Fórmula de valor futuro com pagamentos: VF = PV*(1+i)^n + PMT* [((1+i)^n - 1)/i]
+      // Resolver PMT
+      const i = monthlyRate;
+      const pow = Math.pow(1 + i, months);
+      const numerator = goal - initial * pow;
+      const denominator = (pow - 1) / i;
+      return numerator / denominator; // PMT
+    }
+
+    function buildSchedule(initial, months, monthlyRate, pmt) {
+      const rows = [];
+      let balance = initial;
+      for (let m = 1; m <= months; m++) {
+        const interest = balance * monthlyRate;
+        const end = balance + interest + pmt;
+        rows.push({ m, start: balance, pmt, interest, end });
+        balance = end;
+      }
+      return rows;
+    }
+
+    function updatePlanTable(rows) {
+      const tbody = document.getElementById('planTable');
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td class="px-3 py-2">${r.m}</td>
+          <td class="px-3 py-2">${BRL.format(r.start)}</td>
+          <td class="px-3 py-2">${BRL.format(r.pmt)}</td>
+          <td class="px-3 py-2">${BRL.format(r.interest)}</td>
+          <td class="px-3 py-2 font-medium">${BRL.format(r.end)}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('calcPlanBtn').addEventListener('click', () => {
+      const goal = parseFloat(document.getElementById('goal').value || '0');
+      const initial = parseFloat(document.getElementById('initial').value || '0');
+      const months = parseInt(document.getElementById('months').value || '1');
+      const ratePct = parseFloat(document.getElementById('rate').value || '0');
+
+      if (goal <= 0 || months < 1) {
+        alert('Preencha ao menos a meta (>0) e o prazo (>=1).');
+        return;
+      }
+
+      const i = ratePct / 100; // % ao mês -> decimal
+      const pmt = i === 0
+        ? (goal - initial) / months
+        : calcRequiredMonthly(goal, initial, months, i);
+
+      const rows = buildSchedule(initial, months, i, pmt);
+      updatePlanTable(rows);
+
+      document.getElementById('requiredContribution').textContent = BRL.format(pmt);
+      const final = rows[rows.length - 1]?.end || 0;
+      document.getElementById('resultNote').textContent = `Saldo esperado ao final: ${BRL.format(final)}`;
+    });
+
+    // Controle de Aportes
+    const STORAGE_KEY = 'controle_aportes_v1';
+
+    function loadEntries() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch { return []; }
+    }
+
+    function saveEntries(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+    function renderEntries() {
+      const list = loadEntries();
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = list.map((e, idx) => `
+        <tr>
+          <td class="px-3 py-2">${e.date}</td>
+          <td class="px-3 py-2">${e.category}</td>
+          <td class="px-3 py-2">${BRL.format(e.amount)}</td>
+          <td class="px-3 py-2">${e.notes || ''}</td>
+          <td class="px-3 py-2 text-right">
+            <button data-idx="${idx}" class="text-red-600 hover:underline deleteRow">Remover</button>
+          </td>
+        </tr>
+      `).join('');
+
+      const total = list.reduce((s, e) => s + Number(e.amount || 0), 0);
+      document.getElementById('total').textContent = BRL.format(total);
+    }
+
+    document.getElementById('addForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const entry = {
+        date: document.getElementById('date').value,
+        category: document.getElementById('category').value.trim(),
+        amount: parseFloat(document.getElementById('amount').value || '0'),
+        notes: document.getElementById('notes').value.trim(),
+      };
+      if (!entry.date || !entry.category || !(entry.amount > 0)) {
+        alert('Preencha data, categoria e valor > 0.');
+        return;
+      }
+      const list = loadEntries();
+      list.push(entry);
+      saveEntries(list);
+      (e.target).reset();
+      renderEntries();
+    });
+
+    document.getElementById('tableBody').addEventListener('click', (e) => {
+      const btn = e.target.closest('.deleteRow');
+      if (!btn) return;
+      const idx = parseInt(btn.getAttribute('data-idx'));
+      const list = loadEntries();
+      list.splice(idx, 1);
+      saveEntries(list);
+      renderEntries();
+    });
+
+    document.getElementById('exportCsv').addEventListener('click', () => {
+      const list = loadEntries();
+      const header = 'Data,Categoria,Valor,Notas\n';
+      const body = list.map(e => `${e.date},${e.category},${e.amount},${(e.notes || '').replace(/,/g, ';')}`).join('\n');
+      const blob = new Blob([header + body], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'aportes.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('clearAll').addEventListener('click', () => {
+      if (confirm('Deseja limpar todos os registros?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderEntries();
+      }
+    });
+
+    // Init
+    renderEntries();
+
+    // ================= Portfolio Tracker =================
+    const PF_KEY = 'portfolio_v1';
+    const allocCtx = document.getElementById('allocChart').getContext('2d');
+    let allocChart = new Chart(allocCtx, { type: 'pie', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#60a5fa','#34d399','#f472b6','#fbbf24','#a78bfa','#f87171'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
+
+    function loadPF() { try { return JSON.parse(localStorage.getItem(PF_KEY)) || []; } catch { return []; } }
+    function savePF(list) { localStorage.setItem(PF_KEY, JSON.stringify(list)); }
+
+    function renderPF() {
+      const list = loadPF();
+      const tbody = document.getElementById('pfTable');
+      const rows = [];
+      let total = 0, pl = 0;
+      for (const it of list) {
+        const value = it.qty * it.price;
+        const cost = it.qty * it.avg;
+        const diff = value - cost;
+        total += value; pl += diff;
+        rows.push(`<tr>
+          <td class="px-3 py-2">${it.ticker}</td>
+          <td class="px-3 py-2">${it.class}</td>
+          <td class="px-3 py-2">${it.qty}</td>
+          <td class="px-3 py-2">${BRL.format(it.avg)}</td>
+          <td class="px-3 py-2">${BRL.format(it.price)}</td>
+          <td class="px-3 py-2">${BRL.format(value)}</td>
+          <td class="px-3 py-2 ${diff>=0?'text-green-600':'text-red-600'}">${BRL.format(diff)}</td>
+          <td class="px-3 py-2 text-right"><button data-ticker="${it.ticker}" class="text-red-600 hover:underline pfRemove">Remover</button></td>
+        </tr>`);
+      }
+      tbody.innerHTML = rows.join('');
+      document.getElementById('pfTotal').textContent = BRL.format(total);
+      document.getElementById('pfPL').textContent = BRL.format(pl);
+
+      // allocation by class
+      const byClass = {};
+      for (const it of list) {
+        const v = it.qty * it.price; total = Math.max(total, 0);
+        byClass[it.class] = (byClass[it.class] || 0) + v;
+      }
+      const labels = Object.keys(byClass);
+      const values = Object.values(byClass);
+      allocChart.data.labels = labels;
+      allocChart.data.datasets[0].data = values;
+      allocChart.update();
+    }
+
+    document.getElementById('pfForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const item = {
+        ticker: document.getElementById('pfTicker').value.trim().toUpperCase(),
+        class: document.getElementById('pfClass').value,
+        qty: parseFloat(document.getElementById('pfQty').value || '0'),
+        avg: parseFloat(document.getElementById('pfAvg').value || '0'),
+        price: parseFloat(document.getElementById('pfPrice').value || '0'),
+      };
+      if (!item.ticker || !(item.qty>0) || !(item.avg>0) || !(item.price>0)) { alert('Preencha todos os campos com valores > 0'); return; }
+      const list = loadPF();
+      const idx = list.findIndex(x => x.ticker === item.ticker);
+      if (idx >= 0) list[idx] = item; else list.push(item);
+      savePF(list);
+      (e.target).reset();
+      renderPF();
+    });
+
+    document.getElementById('pfTable').addEventListener('click', (e) => {
+      const btn = e.target.closest('.pfRemove'); if (!btn) return;
+      const ticker = btn.getAttribute('data-ticker');
+      const list = loadPF().filter(x => x.ticker !== ticker);
+      savePF(list); renderPF();
+    });
+
+    document.getElementById('pfExport').addEventListener('click', () => {
+      const list = loadPF();
+      const header = 'Ticker,Classe,Quantidade,PM,Preco,Valor,PL\n';
+      const body = list.map(it => {
+        const value = it.qty * it.price; const cost = it.qty * it.avg; const diff = value - cost;
+        return `${it.ticker},${it.class},${it.qty},${it.avg},${it.price},${value},${diff}`;
+      }).join('\n');
+      const blob = new Blob([header+body], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download='portfolio.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('pfClear').addEventListener('click',()=>{ if(confirm('Limpar portfolio?')){ localStorage.removeItem(PF_KEY); renderPF(); }});
+
+    renderPF();
+
+    // ================= Perfil de Risco =================
+    function perfilToAllocation(horiz, loss, know){
+      // Regras simples: Conservador, Moderado, Arrojado
+      let perfil = 'Moderado';
+      if (horiz==='curto' || loss==='baixa' || know==='iniciante') perfil = 'Conservador';
+      if (horiz==='longo' && loss==='alta' && (know==='intermediario' || know==='avancado')) perfil = 'Arrojado';
+      let alloc;
+      if (perfil==='Conservador') alloc = { 'Renda Fixa':60, 'Ação':10, 'FII':10, 'ETF':10, 'Exterior':8, 'Cripto':2 };
+      else if (perfil==='Arrojado') alloc = { 'Renda Fixa':15, 'Ação':35, 'FII':15, 'ETF':15, 'Exterior':15, 'Cripto':5 };
+      else alloc = { 'Renda Fixa':35, 'Ação':25, 'FII':15, 'ETF':10, 'Exterior':12, 'Cripto':3 };
+      const rate = perfil==='Conservador'?0.6:perfil==='Moderado'?0.8:1.0; // % a.m. sugerida
+      return { perfil, alloc, rate };
+    }
+
+    function renderAllocSuggest(obj){
+      const div = document.getElementById('allocSuggest');
+      div.innerHTML = Object.entries(obj.alloc).map(([k,v])=>`<div class="p-3 bg-white rounded border">${k}: <b>${v}%</b></div>`).join('');
+      document.getElementById('applyNote').textContent = `Perfil: ${obj.perfil}. Taxa mensal sugerida para o Planejador: ${obj.rate}%`;
+    }
+
+    let lastPerfil;
+    document.getElementById('calcPerfil').addEventListener('click',()=>{
+      const h = document.getElementById('qHoriz').value;
+      const l = document.getElementById('qLoss').value;
+      const k = document.getElementById('qKnow').value;
+      lastPerfil = perfilToAllocation(h,l,k);
+      renderAllocSuggest(lastPerfil);
+    });
+
+    document.getElementById('applyPlanner').addEventListener('click',()=>{
+      if (!lastPerfil) { alert('Calcule o perfil primeiro.'); return; }
+      const rateInput = document.getElementById('rate');
+      if (rateInput) { rateInput.value = String(lastPerfil.rate); rateInput.focus(); }
+    });
+
+    // ================= Simuladores =================
+    // Aposentadoria: série de pagamentos ajustada por inflação
+    let retChart;
+    document.getElementById('retCalc').addEventListener('click',()=>{
+      const pmt = parseFloat(document.getElementById('retSalary').value||'0');
+      const years = parseInt(document.getElementById('retYears').value||'0');
+      const r = (parseFloat(document.getElementById('retRate').value||'0')/100);
+      const inf = (parseFloat(document.getElementById('retInfl').value||'0')/100);
+      const n = years*12; const labels = []; let valor=0; const reais=[]; const nominais=[];
+      for(let m=1;m<=n;m++){
+        valor = valor*(1+r) + pmt; // aporte mensal
+        const deflator = Math.pow(1+inf, m);
+        nominais.push(valor); reais.push(valor/deflator); labels.push(m);
+      }
+      const ctx = document.getElementById('retChart').getContext('2d');
+      if (retChart) retChart.destroy();
+      retChart = new Chart(ctx,{ type:'line', data:{ labels, datasets:[ {label:'Valor Nominal', data:nominais, borderColor:'#2563eb', fill:false}, {label:'Valor Real', data:reais, borderColor:'#16a34a', fill:false} ] }, options:{ plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } } });
+    });
+
+    // Portabilidade: compara ficar no A vs migrar para B com taxa de saída
+    let portChart;
+    document.getElementById('portCalc').addEventListener('click',()=>{
+      let V0 = parseFloat(document.getElementById('portInitial').value||'0');
+      const fee = parseFloat(document.getElementById('portFee').value||'0')/100; // %
+      const n = parseInt(document.getElementById('portMonths').value||'0');
+      const rA = parseFloat(document.getElementById('portRateA').value||'0')/100;
+      const rB = parseFloat(document.getElementById('portRateB').value||'0')/100;
+      const labels = []; const serieA=[]; const serieB=[];
+      let a=V0, b=V0*(1-fee);
+      for(let m=1;m<=n;m++){ a=a*(1+rA); b=b*(1+rB); labels.push(m); serieA.push(a); serieB.push(b); }
+      const ctx = document.getElementById('portChart').getContext('2d');
+      if (portChart) portChart.destroy();
+      portChart = new Chart(ctx,{ type:'line', data:{ labels, datasets:[ {label:'Permanecer (A)', data:serieA, borderColor:'#f59e0b', fill:false}, {label:'Migrar (B)', data:serieB, borderColor:'#10b981', fill:false} ] }, options:{ plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } } });
+    });
+
+    // DCA vs Aporte Único
+    let dcaChart;
+    document.getElementById('dcaCalc').addEventListener('click',()=>{
+      const total = parseFloat(document.getElementById('dcaTotal').value||'0');
+      const n = parseInt(document.getElementById('dcaMonths').value||'0');
+      const r = parseFloat(document.getElementById('dcaRate').value||'0')/100;
+      const labels=[]; const serieD=[]; const serieL=[];
+      // Aporte único no início
+      let lump = total;
+      // DCA: divide igualmente por meses
+      const pmt = n>0? total/n : 0; let dca=0;
+      for(let m=1;m<=n;m++){
+        lump *= (1+r);
+        dca = dca*(1+r) + pmt;
+        labels.push(m); serieL.push(lump); serieD.push(dca);
+      }
+      const ctx = document.getElementById('dcaChart').getContext('2d');
+      if (dcaChart) dcaChart.destroy();
+      dcaChart = new Chart(ctx,{ type:'line', data:{ labels, datasets:[ {label:'Aporte Único', data:serieL, borderColor:'#ef4444', fill:false}, {label:'DCA', data:serieD, borderColor:'#3b82f6', fill:false} ] }, options:{ plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } } });
+    });
+  </script>
+</body>
+</html>

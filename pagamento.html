@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagamento • Guia Premium de Investimentos</title>
+  <meta name="description" content="Finalize sua compra do Guia Premium de Investimentos com segurança. Página de pagamento moderna, estilo Stripe, com opções Pix, Cartão e Boleto." />
+
+  <!-- Tailwind local build -->
+  <link rel="stylesheet" href="dist/output.css" />
+
+  <!-- Optional fonts/icons already used no projeto -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <style>
+    /* Pequenos refinamentos sem depender de CDN */
+    .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .card-hover { transition: all .25s ease; }
+    .card-hover:hover { transform: translateY(-4px); }
+    /* Efeitos extras */
+    @keyframes floatSlow { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-10px) } }
+    @keyframes shine { 0%{ background-position: -200% 0 } 100%{ background-position: 200% 0 } }
+    .floating-shape { filter: blur(40px); opacity:.25; animation: floatSlow 10s ease-in-out infinite; }
+    .btn-shine { background-image: linear-gradient(90deg, rgba(255,255,255,.0) 0%, rgba(255,255,255,.35) 50%, rgba(255,255,255,0) 100%); background-size: 200% 100%; }
+    .btn-shine:hover { animation: shine 1.2s linear; }
+    @keyframes toastIn { from{ transform: translateY(8px); opacity:0 } to{ transform: translateY(0); opacity:1 } }
+    @keyframes toastOut { to{ transform: translateY(8px); opacity:0 } }
+    .toast-enter { animation: toastIn .25s ease-out both }
+    .toast-leave { animation: toastOut .25s ease-in forwards }
+    .pop-in { transform: scale(.95); opacity: 0; transition: all .25s ease; }
+    .pop-in.show { transform: scale(1); opacity: 1; }
+    /* Price bump animation */
+    @keyframes bump { 0%{ transform: scale(1) } 50%{ transform: scale(1.06) } 100%{ transform: scale(1) } }
+    .bump { animation: bump .35s ease-out; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100 min-h-screen">
+  <!-- Nav -->
+  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/5 bg-white/5 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="inline-flex items-center gap-2 text-slate-100 hover:text-cyan-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10.03 3.97a.75.75 0 010 1.06L5.06 10h14.19a.75.75 0 010 1.5H5.06l4.97 4.97a.75.75 0 11-1.06 1.06l-6.25-6.25a.75.75 0 010-1.06l6.25-6.25a.75.75 0 011.06 0z" clip-rule="evenodd"/></svg>
+        <span class="text-sm font-medium">Voltar</span>
+      </a>
+      <div class="flex items-center gap-2 text-sm text-slate-300">
+        <span class="hidden sm:inline">Pagamento 100% seguro</span>
+        <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 1.75c-3.176 0-5.75 2.574-5.75 5.75v2.25H5a2.25 2.25 0 00-2.25 2.25v7A2.25 2.25 0 005 21.25h14A2.25 2.25 0 0021.25 19v-7A2.25 2.25 0 0019 9.75h-1.25V7.5c0-3.176-2.574-5.75-5.75-5.75zm-4.25 5.75c0-2.35 1.9-4.25 4.25-4.25s4.25 1.9 4.25 4.25v2.25h-8.5z"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ornamentações animadas -->
+  <div aria-hidden="true" class="pointer-events-none fixed -top-24 -left-16 w-80 h-80 rounded-full bg-cyan-500/20 floating-shape"></div>
+  <div aria-hidden="true" class="pointer-events-none fixed top-40 -right-20 w-96 h-96 rounded-full bg-fuchsia-500/10 floating-shape" style="animation-delay:.6s"></div>
+
+  <!-- Hero / Value Prop -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-600/20 via-transparent to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200 mb-4">
+          <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          Oferta Premium • Acesso Imediato
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-white">
+          Guia Premium de Investimentos
+        </h1>
+        <p class="mt-4 text-slate-300 text-lg leading-relaxed">
+          Aprenda estratégias práticas para vender mais e investir melhor. Tenha um plano claro para multiplicar seus resultados com uma abordagem moderna e validada.
+        </p>
+        <ul class="mt-6 space-y-3 text-slate-200">
+          <li class="flex items-start gap-3"><svg class="w-5 h-5 text-emerald-400 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12a9.75 9.75 0 1117.216 6.606l.689 2.583a1 1 0 01-1.228 1.228l-2.583-.689A9.75 9.75 0 012.25 12zm13.28-2.53a.75.75 0 00-1.06-1.06L10 13.19 8.53 11.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l5-5z" clip-rule="evenodd"/></svg><span>Templates prontos para negociação, follow-up e fechamento rápido</span></li>
+          <li class="flex items-start gap-3"><svg class="w-5 h-5 text-emerald-400 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12a9.75 9.75 0 1117.216 6.606l.689 2.583a1 1 0 01-1.228 1.228l-2.583-.689A9.75 9.75 0 012.25 12zm13.28-2.53a.75.75 0 00-1.06-1.06L10 13.19 8.53 11.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l5-5z" clip-rule="evenodd"/></svg><span>Planos de ação semanais e metas com checklists</span></li>
+          <li class="flex items-start gap-3"><svg class="w-5 h-5 text-emerald-400 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12a9.75 9.75 0 1117.216 6.606l.689 2.583a1 1 0 01-1.228 1.228l-2.583-.689A9.75 9.75 0 012.25 12zm13.28-2.53a.75.75 0 00-1.06-1.06L10 13.19 8.53 11.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l5-5z" clip-rule="evenodd"/></svg><span>Atualizações contínuas e bônus exclusivos</span></li>
+        </ul>
+        <div class="mt-8 flex flex-wrap items-center gap-4">
+          <div class="text-3xl font-extrabold text-white">
+            <span id="price" class="align-middle">R$ 297</span>
+            <span id="originalPrice" class="text-sm font-medium text-slate-400 line-through align-middle ml-2">R$ 497</span>
+            <span id="savings" class="hidden ml-2 align-middle text-sm rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30 px-2 py-0.5">Você economiza R$ 0</span>
+          </div>
+          <div class="flex items-center gap-2 text-emerald-400 text-sm">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.09 6.26H20l-5.17 3.76L16.18 18 12 14.77 7.82 18l1.35-5.98L4 8.26h5.91z"/></svg>
+            Garantia 7 dias
+          </div>
+        </div>
+        <!-- 12x sem juros (destaque próximo ao preço) -->
+        <div class="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-200 px-3 py-1 text-xs">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg>
+          Em até 12x sem juros
+        </div>
+        <!-- Barra de ancoragem de preço (economia vs R$ 497) -->
+        <div class="mt-3 max-w-md">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>Economia em relação a <span class="text-slate-300">R$ 497</span></span>
+            <span id="savePct" class="text-emerald-300">0%</span>
+          </div>
+          <div class="mt-2 h-2 rounded-full bg-white/10 overflow-hidden">
+            <div id="saveBar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 w-0 transition-[width] duration-500"></div>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center gap-3 text-xs text-slate-400">
+          <span>Compatível mobile • Acesso imediato • Suporte por e-mail</span>
+        </div>
+
+        <!-- Urgência: contador de oferta -->
+        <div class="mt-6 inline-flex items-center gap-3 rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-2">
+          <svg class="w-5 h-5 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9.99 9.99 0 00-7.07 2.93A10 10 0 1012 2zm0 18a8 8 0 118-8 8 8 0 01-8 8zm.75-13h-1.5v5.25l4.5 2.67.75-1.23-3.75-2.19z"/></svg>
+          <span class="text-amber-200 text-sm">Oferta termina em <span id="countdown" class="font-bold">15:00</span></span>
+        </div>
+      </div>
+
+      <!-- Checkout Card -->
+      <aside class="w-full lg:max-w-lg">
+        <div class="card-shadow card-hover rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-white">Finalizar Compra</h2>
+            <span class="rounded-full bg-emerald-500/10 text-emerald-300 text-xs px-3 py-1 border border-emerald-400/20">Seguro</span>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="mt-6 space-y-3 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-300">Produto</span>
+              <span class="font-medium text-slate-100">Guia Premium de Investimentos</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-slate-300">Acesso</span>
+              <span class="font-medium text-slate-100">Vitalício + Atualizações</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-slate-300">Garantia</span>
+              <span class="font-medium text-emerald-300">7 dias</span>
+            </div>
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+              <span class="text-slate-300">Total</span>
+              <span id="summaryTotal" class="text-2xl font-extrabold text-white">R$ 297</span>
+            </div>
+          </div>
+
+          <!-- Coupon -->
+          <div class="mt-6">
+            <label for="cupom" class="block text-sm font-medium text-slate-200">Cupom de Desconto</label>
+            <div class="mt-2 flex gap-2">
+              <input id="cupom" type="text" placeholder="VENDEDOR10 ou BLACK20" class="w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
+              <button id="aplicarCupom" class="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold">Aplicar</button>
+            </div>
+            <div class="mt-2 flex items-center justify-between">
+              <p id="cupomMsg" class="text-xs text-slate-400">Dica: use <b>VENDEDOR10</b> (10%) ou <b>BLACK20</b> (20%).</p>
+              <button id="limparCupom" class="text-xs text-slate-400 hover:text-white">Limpar</button>
+            </div>
+          </div>
+
+          <!-- Buyer Info -->
+          <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="nome" class="block text-sm font-medium text-slate-200">Nome Completo</label>
+              <input id="nome" type="text" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Seu nome" />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-slate-200">E-mail</label>
+              <input id="email" type="email" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="voce@email.com" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="whats" class="block text-sm font-medium text-slate-200">WhatsApp</label>
+              <input id="whats" type="tel" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="(00) 00000-0000" />
+            </div>
+          </div>
+
+          <!-- Payment Methods -->
+          <div class="mt-6">
+            <p class="text-sm font-medium text-slate-200 mb-3">Forma de Pagamento</p>
+            <div class="grid grid-cols-3 gap-3" role="tablist" aria-label="Payment Methods">
+              <button id="tab-pix" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 data-[active=true]:border-cyan-500 data-[active=true]:bg-cyan-500/10" data-active="true">Pix</button>
+              <button id="tab-cartao" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200">Cartão</button>
+              <button id="tab-boleto" class="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200">Boleto</button>
+            </div>
+
+            <!-- Pix -->
+            <div id="pane-pix" class="mt-4">
+              <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4 flex items-center justify-between">
+                <div class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-emerald-400 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2.75 2.75 0 011.95.81l6.29 6.28a2.75 2.75 0 010 3.89l-6.29 6.29a2.75 2.75 0 01-3.89 0L3.71 13a2.75 2.75 0 010-3.89L10 2.81A2.75 2.75 0 0112 2z"/></svg>
+                  <div>
+                    <p class="text-slate-100 font-semibold">Pagamento instantâneo</p>
+                    <p class="text-slate-400 text-sm">Aprovação em segundos via Pix. QR Code gerado após clicar em comprar.</p>
+                  </div>
+                </div>
+                <img alt="Pix" src="https://upload.wikimedia.org/wikipedia/commons/0/04/Logo_Pix_branco.png" class="h-6 opacity-80 hidden sm:block" />
+              </div>
+            </div>
+
+            <!-- Cartão -->
+            <div id="pane-cartao" class="mt-4 hidden">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="ccnome" class="block text-sm font-medium text-slate-200">Nome no Cartão</label>
+                  <input id="ccnome" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Como está no cartão" />
+                </div>
+                <div>
+                  <label for="ccnum" class="block text-sm font-medium text-slate-200">Número do Cartão</label>
+                  <input id="ccnum" inputmode="numeric" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="0000 0000 0000 0000" />
+                </div>
+                <div>
+                  <label for="ccexp" class="block text-sm font-medium text-slate-200">Validade (MM/AA)</label>
+                  <input id="ccexp" inputmode="numeric" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="12/27" />
+                </div>
+                <div>
+                  <label for="cccvv" class="block text-sm font-medium text-slate-200">CVV</label>
+                  <input id="cccvv" inputmode="numeric" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="123" />
+                </div>
+              </div>
+              <p class="mt-3 text-xs text-slate-400">Os dados são criptografados e processados com segurança.</p>
+            </div>
+
+            <!-- Boleto -->
+            <div id="pane-boleto" class="mt-4 hidden">
+              <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4">
+                <p class="text-slate-100 font-semibold">Pagamento por Boleto</p>
+                <p class="text-slate-400 text-sm mt-1">O boleto é gerado após clicar em comprar. Compensação em até 2 dias úteis.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <button id="comprarAgora" class="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-6 py-3 relative overflow-hidden btn-shine">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2a1 1 0 00-1 1v2H3a1 1 0 100 2h1.09l1.2 9.6A3 3 0 008.27 20H18a1 1 0 100-2H8.27a1 1 0 01-.99-.86L7.1 15H18a3 3 0 002.92-2.35l1-5A1 1 0 0021 6H7V3a1 1 0 00-1-1zM8 8h12.78l-.8 4a1 1 0 01-.98.8H7.1L6.6 8H8z"/></svg>
+            Comprar agora
+          </button>
+          <!-- Badges de pagamento -->
+          <div class="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-300">
+            <span class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5">
+              <svg class="w-4 h-4 text-emerald-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2.75 2.75 0 011.95.81l6.29 6.28a2.75 2.75 0 010 3.89l-6.29 6.29a2.75 2.75 0 01-3.89 0L3.71 13a2.75 2.75 0 010-3.89L10 2.81A2.75 2.75 0 0112 2z"/></svg>
+              Pix
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5">
+              <svg class="w-4 h-4 text-cyan-300" viewBox="0 0 24 24" fill="currentColor"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v7a2 2 0 01-2 2H8l-4 4v-4H5a2 2 0 01-2-2V7z"/></svg>
+              Cartão
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5">
+              <svg class="w-4 h-4 text-indigo-300" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z"/><path d="M7 10h10v2H7z" class="opacity-60"/></svg>
+              Stripe
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-200">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg>
+              Em até 12x sem juros
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-200">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12l5 5L20 7"/></svg>
+              Compra segura
+            </span>
+          </div>
+          <div class="mt-3 text-center text-xs text-slate-400">Ao continuar, você concorda com os Termos e Política de Privacidade.</div>
+
+          <!-- Trust badges -->
+          <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+            <div class="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+              <span class="block text-xs text-slate-300">Pagamento Seguro</span>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+              <span class="block text-xs text-slate-300">Suporte Rápido</span>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+              <span class="block text-xs text-slate-300">Satisfação Garantida</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Sticky bar (mobile) -->
+  <div class="fixed bottom-0 inset-x-0 md:hidden z-30 border-t border-white/10 bg-slate-900/90 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div>
+        <div class="text-white font-bold">Guia Premium</div>
+        <div class="text-cyan-300 text-sm"><span id="mobilePrice">R$ 297</span> <span class="text-slate-500 line-through text-xs ml-1">R$ 497</span></div>
+      </div>
+      <button id="comprarAgoraMobile" class="rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-4 py-2">Comprar</button>
+    </div>
+  </div>
+
+  <!-- Logos / Social Proof (Carrossel de Referências) -->
+  <section class="py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-center text-sm text-slate-400">Profissionais de vendas e empreendedores confiam nas metodologias deste Guia</p>
+      <div class="mt-6 relative">
+        <!-- Controles -->
+        <button id="payRefPrev" class="absolute -left-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center w-9 h-9 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-slate-200" aria-label="Anterior">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button id="payRefNext" class="absolute -right-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center w-9 h-9 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-slate-200" aria-label="Próximo">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <!-- Janela -->
+        <div id="payRefCarousel" class="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/40 to-slate-800/20">
+          <div class="flex transition-transform duration-500 ease-out">
+            <!-- Slide 1 -->
+            <article class="group min-w-full md:min-w-[50%] p-6">
+              <div class="relative flex items-center gap-5 rounded-2xl border border-white/10 bg-white/5 p-5 hover:shadow-xl hover:shadow-emerald-900/15">
+                <div class="relative">
+                  <img src="/assets/images/erico.jpeg" alt="Erico Rocha" class="w-20 h-20 rounded-xl object-cover ring-1 ring-emerald-400/30 shadow-lg shadow-emerald-900/20">
+                  <span class="absolute -top-1 -right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600/90 text-white text-xs shadow">★</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-extrabold text-emerald-300 drop-shadow">Erico Rocha</h3>
+                  <div class="mt-0.5 text-xs inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2 py-0.5 text-emerald-200">Fórmula de Lançamento</div>
+                  <p class="mt-2 text-slate-300 text-sm flex items-start gap-2"><svg class="w-4 h-4 text-emerald-300 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 17h3l7-7-3-3-7 7v3zm8-9l3 3"/></svg><span>Escala vem de método e mensagem. Quem domina processo, domina o jogo.</span></p>
+                </div>
+                <div class="pointer-events-none absolute -z-10 -right-8 -bottom-8 w-28 h-28 rounded-full bg-emerald-500/10 blur-2xl"></div>
+              </div>
+            </article>
+            <!-- Slide 2 -->
+            <article class="group min-w-full md:min-w-[50%] p-6">
+              <div class="relative flex items-center gap-5 rounded-2xl border border-white/10 bg-white/5 p-5 hover:shadow-xl hover:shadow-cyan-900/15">
+                <div class="relative">
+                  <img src="/assets/images/joao.jpg" alt="João Kepler" class="w-20 h-20 rounded-xl object-cover ring-1 ring-cyan-400/30 shadow-lg shadow-cyan-900/20">
+                  <span class="absolute -top-1 -right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600/90 text-white text-xs shadow">★</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-extrabold text-cyan-300 drop-shadow">João Kepler</h3>
+                  <div class="mt-0.5 text-xs inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-2 py-0.5 text-cyan-200">Bossa Invest • Investidor‑anjo</div>
+                  <p class="mt-2 text-slate-300 text-sm flex items-start gap-2"><svg class="w-4 h-4 text-cyan-300 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 17h3l7-7-3-3-7 7v3zm8-9l3 3"/></svg><span>Decisão com dados, execução com disciplina. É assim que se cresce com consistência.</span></p>
+                </div>
+                <div class="pointer-events-none absolute -z-10 -left-8 -top-8 w-28 h-28 rounded-full bg-cyan-500/10 blur-2xl"></div>
+              </div>
+            </article>
+            <!-- Slide 3 -->
+            <article class="group min-w-full md:min-w-[50%] p-6">
+              <div class="relative flex items-center gap-5 rounded-2xl border border-white/10 bg-white/5 p-5 hover:shadow-xl hover:shadow-fuchsia-900/15">
+                <div class="relative">
+                  <img src="/assets/images/bruno.jpg" alt="Bruno Perini" class="w-20 h-20 rounded-xl object-cover ring-1 ring-fuchsia-400/30 shadow-lg shadow-fuchsia-900/20">
+                  <span class="absolute -top-1 -right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-fuchsia-600/90 text-white text-xs shadow">★</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-extrabold text-fuchsia-300 drop-shadow">Bruno Perini</h3>
+                  <div class="mt-0.5 text-xs inline-flex items-center gap-2 rounded-full border border-fuchsia-400/20 bg-fuchsia-500/10 px-2 py-0.5 text-fuchsia-200">Você Mais Rico</div>
+                  <p class="mt-2 text-slate-300 text-sm flex items-start gap-2"><svg class="w-4 h-4 text-fuchsia-300 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 17h3l7-7-3-3-7 7v3zm8-9l3 3"/></svg><span>Riqueza é resultado de boas decisões repetidas ao longo do tempo.</span></p>
+                </div>
+                <div class="pointer-events-none absolute -z-10 -right-8 -top-8 w-28 h-28 rounded-full bg-fuchsia-500/10 blur-2xl"></div>
+              </div>
+            </article>
+            <!-- Slide 4 -->
+            <article class="group min-w-full md:min-w-[50%] p-6">
+              <div class="relative flex items-center gap-5 rounded-2xl border border-white/10 bg-white/5 p-5 hover:shadow-xl hover:shadow-amber-900/15">
+                <div class="relative">
+                  <img src="/assets/images/thiago.png" alt="Thiago Concer" class="w-20 h-20 rounded-xl object-cover ring-1 ring-amber-400/30 shadow-lg shadow-amber-900/20">
+                  <span class="absolute -top-1 -right-1 inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-600/90 text-white text-xs shadow">★</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-extrabold text-amber-300 drop-shadow">Thiago Concer</h3>
+                  <div class="mt-0.5 text-xs inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-500/10 px-2 py-0.5 text-amber-200">OSV — Orgulho de Ser Vendedor</div>
+                  <p class="mt-2 text-slate-300 text-sm flex items-start gap-2"><svg class="w-4 h-4 text-amber-300 mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M7 17h3l7-7-3-3-7 7v3zm8-9l3 3"/></svg><span>Vendas é método, rotina e energia. Faça o básico no nível avançado.</span></p>
+                </div>
+                <div class="pointer-events-none absolute -z-10 -left-8 -bottom-8 w-28 h-28 rounded-full bg-amber-500/10 blur-2xl"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Dots -->
+        <div class="mt-4 flex justify-center gap-2" id="payRefDots" aria-label="Navegação de slides"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="py-12 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h3 class="text-2xl font-bold text-white text-center">Resultados Reais</h3>
+      <p class="text-slate-400 text-center mt-2">O que vendedores estão dizendo</p>
+      <div class="mt-8 grid md:grid-cols-3 gap-6">
+        <figure class="rounded-2xl border border-white/10 bg-white/5 p-6 card-shadow card-hover">
+          <blockquote class="text-slate-200">“Em 30 dias bati 138% da meta usando as rotinas de prospecção do Guia.”</blockquote>
+          <figcaption class="mt-4 text-sm text-slate-400">— Marcos, Executivo de Vendas</figcaption>
+        </figure>
+        <figure class="rounded-2xl border border-white/10 bg-white/5 p-6 card-shadow card-hover">
+          <blockquote class="text-slate-200">“Os roteiros de objeções são incríveis. Fechei 3 contratos em uma semana.”</blockquote>
+          <figcaption class="mt-4 text-sm text-slate-400">— Camila, Closer</figcaption>
+        </figure>
+        <figure class="rounded-2xl border border-white/10 bg-white/5 p-6 card-shadow card-hover">
+          <blockquote class="text-slate-200">“Finalmente um método prático. A equipe inteira elevou o ticket médio.”</blockquote>
+          <figcaption class="mt-4 text-sm text-slate-400">— Renato, Gestor Comercial</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-12 border-t border-white/10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h3 class="text-2xl font-bold text-white text-center">Perguntas Frequentes</h3>
+      <div class="mt-8 space-y-4">
+        <details class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <summary class="cursor-pointer text-slate-100 font-semibold">Como recebo o acesso?</summary>
+          <p class="mt-2 text-slate-300">Após a aprovação do pagamento, você recebe um e-mail com o acesso imediato e instruções.</p>
+        </details>
+        <details class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <summary class="cursor-pointer text-slate-100 font-semibold">Tem garantia?</summary>
+          <p class="mt-2 text-slate-300">Sim, 7 dias. Se não gostar, devolvemos 100% do valor.</p>
+        </details>
+        <details class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <summary class="cursor-pointer text-slate-100 font-semibold">Quais formas de pagamento?</summary>
+          <p class="mt-2 text-slate-300">Pix, Cartão de Crédito e Boleto bancário.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 border-t border-white/10 text-center text-sm text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div>© <span id="year"></span> Guia Premium de Investimentos. Todos os direitos reservados.</div>
+      <div class="mt-2">Termos • Privacidade • Suporte</div>
+    </div>
+  </footer>
+
+  <!-- Toast container -->
+  <div id="toastStack" class="fixed bottom-24 right-4 z-40 space-y-2"></div>
+
+  <!-- Modal de Promoção -->
+  <div id="promoModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 p-4">
+    <div class="pop-in max-w-lg w-full rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-slate-100">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-1 text-xs text-fuchsia-200 mb-3">
+            Oferta Relâmpago
+          </div>
+          <h3 class="text-2xl font-extrabold">-15% nos próximos minutos</h3>
+          <p class="mt-2 text-slate-300">Use o cupom <b>VENDEDOR10</b> para 10% OFF ou <b>BLACK20</b> para 20% OFF (tempo limitado).</p>
+        </div>
+        <button id="closePromo" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <div class="mt-5 grid sm:grid-cols-2 gap-3">
+        <button id="usarVendedor10" class="rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-4 py-2">Aplicar VENDEDOR10</button>
+        <button id="usarBlack20" class="rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2">Aplicar BLACK20</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Carrossel Referências (Pagamento)
+    document.addEventListener('DOMContentLoaded', function(){
+      const root = document.getElementById('payRefCarousel');
+      if (!root) return;
+      const track = root.firstElementChild;
+      const slides = Array.from(track.children);
+      const prev = document.getElementById('payRefPrev');
+      const next = document.getElementById('payRefNext');
+      const dotsWrap = document.getElementById('payRefDots');
+      let idx = 0;
+      let lock = false;
+      function perView(){ return window.innerWidth >= 768 ? 2 : 1; }
+      function update(){
+        const pv = perView();
+        const maxIdx = Math.max(0, Math.ceil(slides.length / pv) - 1);
+        if (idx < 0) idx = maxIdx;
+        if (idx > maxIdx) idx = 0;
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        dotsWrap.innerHTML = '';
+        for(let i=0;i<=maxIdx;i++){
+          const b = document.createElement('button');
+          b.className = `w-2.5 h-2.5 rounded-full ${i===idx? 'bg-emerald-400':'bg-white/25'} hover:bg-white/40`;
+          b.setAttribute('aria-label', `Ir para o slide ${i+1}`);
+          b.addEventListener('click', ()=>{ idx = i; update(); resetAutoplay(); });
+          dotsWrap.appendChild(b);
+        }
+      }
+      function go(delta){ if (lock) return; lock = true; idx += delta; update(); setTimeout(()=> lock=false, 450); }
+      prev?.addEventListener('click', ()=> { go(-1); resetAutoplay(); });
+      next?.addEventListener('click', ()=> { go(1); resetAutoplay(); });
+      window.addEventListener('resize', update);
+      let timer;
+      function start(){ timer = setInterval(()=> go(1), 6000); }
+      function stop(){ if (timer) clearInterval(timer); }
+      function resetAutoplay(){ stop(); start(); }
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      update();
+      start();
+    });
+  </script>
+
+  <script>
+    // Preço/cupom aprimorado
+    (function () {
+      const fmtBRL = (n) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const basePrice = 297;
+      const compareAt = 497;
+      const coupons = { VENDEDOR10: 0.10, BLACK20: 0.20 };
+      let applied = null;
+
+      // Elements
+      const elPrice = document.getElementById('price');
+      const elSummaryTotal = document.getElementById('summaryTotal');
+      const elMobilePrice = document.getElementById('mobilePrice');
+      const elSavings = document.getElementById('savings');
+      const elCupom = document.getElementById('cupom');
+      const elApply = document.getElementById('aplicarCupom');
+      const elClear = document.getElementById('limparCupom');
+      const elMsg = document.getElementById('cupomMsg');
+      const toastStack = document.getElementById('toastStack');
+      const saveBar = document.getElementById('saveBar');
+      const savePct = document.getElementById('savePct');
+
+      // Confetti leve (canvas temporário)
+      function confettiBurst(){
+        const c = document.createElement('canvas');
+        const ctx = c.getContext('2d');
+        if (!ctx) return;
+        const dpr = window.devicePixelRatio || 1;
+        const W = c.width = innerWidth * dpr;
+        const H = c.height = innerHeight * dpr;
+        c.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:60';
+        document.body.appendChild(c);
+        const n = 120;
+        const parts = Array.from({length:n}).map(()=>({
+          x: Math.random()*W, y: -20*dpr, vx: (Math.random()-.5)*1.2*dpr, vy: (1+Math.random()*2)*dpr,
+          size: (2+Math.random()*3)*dpr, color: `hsl(${Math.random()*360},80%,60%)`, life: 60+Math.random()*40
+        }));
+        let t = 0; const id = requestAnimationFrame(function loop(){
+          ctx.clearRect(0,0,W,H);
+          parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.03*dpr; p.life--; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,p.size,p.size); });
+          t++; if (t<80) requestAnimationFrame(loop); else { c.remove(); cancelAnimationFrame(id); }
+        });
+      }
+
+      function showToast(text, ok = true) {
+        if (!toastStack) return;
+        const t = document.createElement('div');
+        t.className = `toast-enter rounded-lg border px-3 py-2 text-sm ${ok ? 'bg-emerald-500/15 border-emerald-400/30 text-emerald-200' : 'bg-rose-500/15 border-rose-400/30 text-rose-200'}`;
+        t.textContent = text;
+        toastStack.appendChild(t);
+        setTimeout(() => { t.classList.add('toast-leave'); setTimeout(() => t.remove(), 250); }, 2200);
+      }
+
+      function animate(el){ if(!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+
+      function applyPrice(p){
+        if (elPrice) { elPrice.textContent = fmtBRL(p); animate(elPrice); }
+        if (elSummaryTotal) elSummaryTotal.textContent = fmtBRL(p);
+        if (elMobilePrice) elMobilePrice.textContent = fmtBRL(p);
+        const saved = Math.max(0, compareAt - p);
+        if (elSavings){
+          if (saved > 0) { elSavings.textContent = `Você economiza ${fmtBRL(saved)}`; elSavings.classList.remove('hidden'); }
+          else { elSavings.classList.add('hidden'); }
+        }
+        // Atualiza barra de economia (ancoragem)
+        const maxSave = compareAt - Math.round(basePrice * (1 - 0.20));
+        const pct = Math.max(0, Math.min(100, Math.round((saved / (maxSave||1)) * 100)));
+        if (saveBar) saveBar.style.width = pct + '%';
+        if (savePct) savePct.textContent = pct + '%';
+      }
+
+      function handleApply(code){
+        const c = (code || elCupom?.value || '').trim().toUpperCase();
+        if (!c) { elMsg.textContent = 'Informe um cupom válido.'; elMsg.className = 'text-xs text-rose-400'; showToast('Informe um cupom.', false); return; }
+        const pct = coupons[c];
+        if (!pct) { elMsg.textContent = 'Cupom inválido.'; elMsg.className = 'text-xs text-rose-400'; showToast('Cupom inválido.', false); return; }
+        applied = { code: c, pct };
+        const novo = Math.round(basePrice * (1 - pct));
+        applyPrice(novo);
+        elMsg.textContent = `Cupom aplicado! ${Math.round(pct*100)}% OFF`;
+        elMsg.className = 'text-xs text-emerald-400';
+        showToast(`Cupom ${c} aplicado: ${Math.round(pct*100)}% OFF!`);
+        confettiBurst();
+      }
+
+      function handleClear(){
+        applied = null; if (elCupom) elCupom.value = '';
+        applyPrice(basePrice);
+        elMsg.textContent = 'Cupom removido.';
+        elMsg.className = 'text-xs text-slate-400';
+        showToast('Cupom removido');
+      }
+
+      // Bind actions
+      if (elApply) elApply.addEventListener('click', () => handleApply());
+      if (elCupom) elCupom.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') { e.preventDefault(); handleApply(); } });
+      if (elClear) elClear.addEventListener('click', handleClear);
+
+      // Init
+      applyPrice(basePrice);
+
+      // Countdown de oferta: 15 minutos por sessão, persiste em sessionStorage
+      (function(){
+        const cd = document.getElementById('countdown');
+        if (!cd) return;
+        const KEY = 'offer_end';
+        const now = Date.now();
+        let end = Number(sessionStorage.getItem(KEY) || 0);
+        if (!end || isNaN(end) || end < now) {
+          end = now + 15 * 60 * 1000; // 15 minutos
+          sessionStorage.setItem(KEY, String(end));
+        }
+        function render(){
+          const left = Math.max(0, end - Date.now());
+          const secs = Math.floor(left / 1000);
+          const m = String(Math.floor(secs / 60)).padStart(2,'0');
+          const s = String(secs % 60).padStart(2,'0');
+          cd.textContent = `${m}:${s}`;
+          if (secs <= 0) {
+            cd.classList.add('text-amber-300');
+            return true; // done
+          }
+          return false;
+        }
+        render();
+        const tmr = setInterval(()=>{ if (render()) clearInterval(tmr); }, 1000);
+      })();
+
+      // Tabs simples (Pix, Cartão, Boleto)
+      const setActive = (id) => {
+        const tabs = ['pix','cartao','boleto'];
+        tabs.forEach(t => {
+          const tab = document.getElementById('tab-' + t);
+          const pane = document.getElementById('pane-' + t);
+          if (!tab || !pane) return;
+          const active = t === id;
+          tab.dataset.active = active ? 'true' : 'false';
+          pane.classList.toggle('hidden', !active);
+        });
+      };
+      ['pix','cartao','boleto'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.addEventListener('click', () => setActive(t));
+      });
+
+      // Ano rodapé
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+
+      // CTA: cria preferência no backend e redireciona para o checkout do Mercado Pago
+      const btn = document.getElementById('comprarAgora');
+      async function createPreferenceAndRedirect() {
+        try {
+          const nome = document.getElementById('nome')?.value || '';
+          const email = document.getElementById('email')?.value || '';
+          const unit_price = Number((document.getElementById('price')?.textContent || '297').replace(/[^0-9,\.]/g,'').replace(',', '.')) || 297;
+          const body = {
+            title: 'Guia Premium de Investimentos',
+            description: 'Acesso vitalício + atualizações',
+            quantity: 1,
+            currency_id: 'BRL',
+            unit_price,
+            payer: { name: nome, email },
+            metadata: { origem: 'pagamento.html' }
+          };
+          const resp = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          if (!resp.ok) throw new Error('Falha ao iniciar pagamento');
+          const data = await resp.json();
+          const redirectUrl = data.init_point || data.sandbox_init_point;
+          if (!redirectUrl) throw new Error('URL de checkout não recebida');
+          window.location.href = redirectUrl;
+        } catch (e) {
+          alert('Erro ao iniciar pagamento. Tente novamente.');
+          console.error(e);
+        }
+      }
+      if (btn) btn.addEventListener('click', createPreferenceAndRedirect);
+      // CTA mobile
+      const btnm = document.getElementById('comprarAgoraMobile');
+      if (btnm) btnm.addEventListener('click', () => btn?.click());
+
+      // Promo modal: open after delay and wire buttons
+      const modal = document.getElementById('promoModal');
+      const closePromo = document.getElementById('closePromo');
+      const usarVendedor10 = document.getElementById('usarVendedor10');
+      const usarBlack20 = document.getElementById('usarBlack20');
+      function openModal(){ if (!modal) return; modal.classList.remove('hidden'); setTimeout(()=> modal.querySelector('.pop-in')?.classList.add('show'), 20); }
+      function closeModal(){ if (!modal) return; modal.querySelector('.pop-in')?.classList.remove('show'); setTimeout(()=> modal.classList.add('hidden'), 180); }
+      setTimeout(openModal, 3500);
+      if (closePromo) closePromo.addEventListener('click', closeModal);
+      if (modal) modal.addEventListener('click', (e)=>{ if (e.target === modal) closeModal(); });
+      if (usarVendedor10) usarVendedor10.addEventListener('click', ()=>{ if (elCupom) elCupom.value = 'VENDEDOR10'; handleApply('VENDEDOR10'); closeModal(); });
+      if (usarBlack20) usarBlack20.addEventListener('click', ()=>{ if (elCupom) elCupom.value = 'BLACK20'; handleApply('BLACK20'); closeModal(); });
+
+    
+
+      // Social proof aleatório (4–7 min) com nomes reais
+      (function(){
+        const entries = [
+          'Luana V. – de Taubaté/SP','Heitor M. – de Joinville/SC','Cássia L. – de Uberlândia/MG','Enzo Gabriel D. – de São José dos Campos/SP','Mirela A. – de Campina Grande/PB','Raul P. – de Blumenau/SC','Ayla R. – de Maceió/AL','Benício T. – de Niterói/RJ','Heloísa K. – de Maringá/PR','Levi H. – de Teresina/PI','Yara N. – de Franca/SP','Davi Lucca S. – de Osasco/SP','Melina G. – de São Carlos/SP','Ícaro J. – de Petrolina/PE','Celine D. – de Palmas/TO','Thales C. – de Cuiabá/MT','Aimee F. – de Campo Grande/MS','Lorenzo M. – de Vitória/ES','Maysa P. – de Londrina/PR','Cael B. – de Ilhéus/BA','Isis M. – de Nova Iguaçu/RJ','Otto V. – de Boa Vista/RR','Eloá G. – de Barueri/SP','Bryan A. – de Caxias do Sul/RS','Amélie N. – de São Luís/MA','Gael R. – de Anápolis/GO','Isadora Y. – de Aracaju/SE','Ruan L. – de Belford Roxo/RJ','Zaira K. – de Porto Velho/RO','Théo R. – de Juazeiro do Norte/CE','Celina T. – de Jundiaí/SP','Noah S. – de Belém/PA','Mirelle F. – de Pelotas/RS','Enrico D. – de Betim/MG','Ayra M. – de Ribeirão Preto/SP','Ítalo B. – de Vila Velha/ES','Lis L. – de Araraquara/SP','Levi R. – de Natal/RN','Alana Z. – de João Pessoa/PB','Caleb T. – de Santos/SP','Cora E. – de São José/SC','Ezra V. – de Sorocaba/SP','Jade M. – de Goiânia/GO','Eliel S. – de Feira de Santana/BA','Elen K. – de Piracicaba/SP','Gael M. – de Contagem/MG','Aysha N. – de Canoas/RS','Ravi C. – de Brasília/DF','Dara F. – de Montes Claros/MG','Zion J. – de Recife/PE'
+        ];
+        const verbs = ['comprou', 'aplicou desconto'];
+        function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+        function nextDelay(){ return (240 + Math.floor(Math.random()*180)) * 1000; } // 4–7 min
+        (function loop(){
+          setTimeout(()=>{ showToast(pick(entries) + ' ' + pick(verbs)); loop(); }, nextDelay());
+        })();
+      })();
+
+      // Exit-intent opcional para reforçar modal
+      let shownExit = false;
+      document.addEventListener('mousemove', (e)=>{ if(!shownExit && e.clientY < 10){ shownExit=true; const btn = document.getElementById('usarBlack20'); if(btn){ btn.focus(); } } });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "declaration-block-no-redundant-longhand-properties": null,
+    "declaration-block-no-shorthand-property-overrides": null,
+    "declaration-no-important": null,
+    "selector-class-pattern": null,
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen"]
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["v-deep"]
+      }
+    ],
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
+    "no-empty-source": null,
+    "no-extra-semicolons": null,
+    "no-invalid-double-slash-comments": null,
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": ["appearance", "user-select", "tap-highlight-color"]
+      }
+    ],
+    "property-disallowed-list": null,
+    "declaration-property-value-disallowed-list": null,
+    "declaration-property-value-allowed-list": null
+  },
+  "ignoreFiles": ["dist/**/*.css"]
+}
