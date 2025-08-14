@@ -8,7 +8,8 @@
 
   <!-- Tailwind local build -->
   <link rel="stylesheet" href="dist/output.css" />
-
+  <!-- Mercado Pago SDK -->
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <!-- Optional fonts/icons already used no projeto -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -193,25 +194,11 @@
 
             <!-- Cartão -->
             <div id="pane-cartao" class="mt-4 hidden">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label for="ccnome" class="block text-sm font-medium text-slate-200">Nome no Cartão</label>
-                  <input id="ccnome" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="Como está no cartão" />
-                </div>
-                <div>
-                  <label for="ccnum" class="block text-sm font-medium text-slate-200">Número do Cartão</label>
-                  <input id="ccnum" inputmode="numeric" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="0000 0000 0000 0000" />
-                </div>
-                <div>
-                  <label for="ccexp" class="block text-sm font-medium text-slate-200">Validade (MM/AA)</label>
-                  <input id="ccexp" inputmode="numeric" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="12/27" />
-                </div>
-                <div>
-                  <label for="cccvv" class="block text-sm font-medium text-slate-200">CVV</label>
-                  <input id="cccvv" inputmode="numeric" class="mt-2 w-full rounded-lg bg-slate-800/60 border border-white/10 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" placeholder="123" />
-                </div>
+              <div class="rounded-xl border border-white/10 bg-slate-800/40 p-4">
+                <p class="text-slate-100 font-semibold mb-2">Pagar com Cartão (sem sair do site)</p>
+                <div id="mp-card-brick" class="bg-slate-900/40 rounded-lg p-3"></div>
+                <p class="mt-3 text-xs text-slate-400">Pagamento processado com segurança via Mercado Pago.</p>
               </div>
-              <p class="mt-3 text-xs text-slate-400">Os dados são criptografados e processados com segurança.</p>
             </div>
 
             <!-- Boleto -->
@@ -491,6 +478,7 @@
       const compareAt = 497;
       const coupons = { VENDEDOR10: 0.10, BLACK20: 0.20 };
       let applied = null;
+      let currentPriceValue = basePrice;
 
       // Elements
       const elPrice = document.getElementById('price');
@@ -539,6 +527,7 @@
       function animate(el){ if(!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
 
       function applyPrice(p){
+        currentPriceValue = p;
         if (elPrice) { elPrice.textContent = fmtBRL(p); animate(elPrice); }
         if (elSummaryTotal) elSummaryTotal.textContent = fmtBRL(p);
         if (elMobilePrice) elMobilePrice.textContent = fmtBRL(p);
@@ -628,6 +617,57 @@
         if (el) el.addEventListener('click', () => setActive(t));
       });
 
+      // Inicializa Mercado Pago Bricks (Cartão no-site)
+      let cardBrickController = null;
+      async function initCardBrick(){
+        try {
+          if (typeof window.MercadoPago === 'undefined') return;
+          const conf = await fetch('/api/mercadopago').then(r=>r.json()).catch(()=>({ publicKey: '' }));
+          if (!conf?.publicKey) return;
+          const mp = new MercadoPago(conf.publicKey, { locale: 'pt-BR' });
+          const bricks = mp.bricks();
+          if (cardBrickController) { try { await cardBrickController.unmount(); } catch(_){} }
+          cardBrickController = await bricks.create('cardPayment', 'mp-card-brick', {
+            initialization: { amount: currentPriceValue },
+            customization: {
+              visual: { style: { theme: 'dark' } },
+              paymentMethods: { maxInstallments: 12 },
+              hidePaymentButton: true
+            },
+            callbacks: {
+              onReady: () => {},
+              onError: (e) => { console.error('MP Brick error', e); alert('Erro ao carregar pagamento no cartão.'); },
+              onSubmit: async ({ formData }) => {
+                try {
+                  const email = document.getElementById('email')?.value || '';
+                  const payload = {
+                    token: formData.token,
+                    issuer_id: formData.issuerId,
+                    payment_method_id: formData.paymentMethodId,
+                    transaction_amount: currentPriceValue,
+                    installments: formData.installments,
+                    description: 'Guia Premium de Investimentos',
+                    payer: { email, identification: formData.identification }
+                  };
+                  const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                  const data = await resp.json();
+                  if (resp.ok && (data.status === 'approved' || data.status === 'in_process')) {
+                    window.location.href = '/success.html';
+                  } else {
+                    alert('Pagamento não aprovado. Status: ' + (data.status || 'erro'));
+                  }
+                } catch (e) {
+                  console.error('Submit pay error', e);
+                  alert('Erro ao processar pagamento.');
+                }
+              }
+            }
+          });
+        } catch (e) { console.error('initCardBrick failed', e); }
+      }
+      // Inicia o brick após um pequeno delay para garantir DOM pronto
+      setTimeout(initCardBrick, 500);
+
       // Ano rodapé
       const y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
@@ -663,7 +703,14 @@
           console.error(e);
         }
       }
-      if (btn) btn.addEventListener('click', createPreferenceAndRedirect);
+      if (btn) btn.addEventListener('click', async () => {
+        const isCard = document.getElementById('tab-cartao')?.dataset.active === 'true';
+        if (isCard && cardBrickController) {
+          try { await cardBrickController.submit(); } catch (e) { console.error(e); }
+        } else {
+          await createPreferenceAndRedirect();
+        }
+      });
       // CTA mobile
       const btnm = document.getElementById('comprarAgoraMobile');
       if (btnm) btnm.addEventListener('click', () => btn?.click());

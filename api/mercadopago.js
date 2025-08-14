@@ -20,6 +20,12 @@ module.exports = async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(204).end();
   }
 
+  // GET: expõe configuração pública (chave pública) para o frontend inicializar o SDK
+  if (req.method === 'GET') {
+    const pk = process.env.MP_PUBLIC_KEY || '';
+    return res.status(200).json({ publicKey: pk });
+  }
+
   if (req.method !== 'POST') {
     res.statusCode = 405;
     return res.end('Method not allowed');
