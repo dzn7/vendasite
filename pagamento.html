@@ -52,6 +52,16 @@
     </div>
   </header>
 
+  <!-- Processing banner -->
+  <div id="processingBanner" class="hidden sticky top-16 z-30">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mt-3 rounded-xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-200 p-3 flex items-center gap-3" role="status" aria-live="polite">
+        <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9" class="opacity-30"/><path d="M21 12a9 9 0 00-9-9"/></svg>
+        <span id="processingText" class="text-sm">Processando pagamento… aguarde alguns instantes.</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Ornamentações animadas -->
   <div aria-hidden="true" class="pointer-events-none fixed -top-24 -left-16 w-80 h-80 rounded-full bg-cyan-500/20 floating-shape"></div>
   <div aria-hidden="true" class="pointer-events-none fixed top-40 -right-20 w-96 h-96 rounded-full bg-fuchsia-500/10 floating-shape" style="animation-delay:.6s"></div>
@@ -688,30 +698,46 @@
             callbacks: {
               onReady: () => {},
               onError: (e) => { console.error('MP Brick error', e); alert('Erro ao carregar pagamento no cartão.'); },
-              onSubmit: async ({ formData }) => {
-                try {
-                  const email = document.getElementById('email')?.value || '';
-                  if (!formData || !formData.token) throw new Error('Token do cartão ausente');
-                  const payload = {
-                    token: formData.token,
-                    issuer_id: formData.issuerId,
-                    payment_method_id: formData.paymentMethodId,
-                    transaction_amount: currentPriceValue,
-                    installments: formData.installments,
-                    description: 'Guia Premium de Investimentos',
-                    payer: { email, identification: formData.identification }
-                  };
-                  const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                  const data = await resp.json();
-                  if (resp.ok && (data.status === 'approved' || data.status === 'in_process')) {
-                    window.location.href = '/success.html';
-                  } else {
-                    alert('Pagamento não aprovado. Status: ' + (data.status || 'erro'));
+              onSubmit: (arg1, _actions) => {
+                return new Promise(async (resolve, reject) => {
+                  try {
+                    const email = document.getElementById('email')?.value || '';
+                    const fd = arg1 && 'formData' in arg1 ? arg1.formData : arg1;
+                    console.debug('MP Bricks normalized formData:', fd);
+                    if (!fd || !fd.token) throw new Error('Token do cartão ausente');
+                    const payload = {
+                      token: fd.token,
+                      issuer_id: fd.issuerId,
+                      payment_method_id: fd.paymentMethodId,
+                      transaction_amount: currentPriceValue,
+                      installments: fd.installments,
+                      description: 'Guia Premium de Investimentos',
+                      payer: { email, identification: fd.identification }
+                    };
+                    const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    const data = await resp.json();
+                    if (resp.ok) {
+                      // Se aprovado, redireciona; se em processamento, inicia polling
+                      if (data.status === 'approved') {
+                        resolve();
+                        window.location.href = '/success.html';
+                      } else if (data.id) {
+                        resolve();
+                        pollPaymentStatus(data.id);
+                      } else {
+                        alert('Pagamento não aprovado. Status: ' + (data.status || 'erro'));
+                        reject(new Error('payment_not_approved'));
+                      }
+                    } else {
+                      alert('Pagamento não aprovado. Status: ' + (data.status || 'erro'));
+                      reject(new Error('payment_not_approved'));
+                    }
+                  } catch (e) {
+                    console.error('Submit pay error', e);
+                    alert('Erro ao processar pagamento.');
+                    reject(e);
                   }
-                } catch (e) {
-                  console.error('Submit pay error', e);
-                  alert('Erro ao processar pagamento.');
-                }
+                });
               }
             }
           });
@@ -774,19 +800,20 @@
           };
           const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
           const data = await resp.json();
-          if (!resp.ok) { alert('Erro ao gerar Pix.'); return; }
-          const area = document.getElementById('pix-qr-area');
+          if (!resp.ok) throw new Error(data?.message || 'Falha ao gerar Pix');
           const img = document.getElementById('pix-qr-img');
           const code = document.getElementById('pix-qr-code');
           const link = document.getElementById('pix-ticket-link');
           if (data.qr_code_base64) img.src = 'data:image/png;base64,' + data.qr_code_base64; else img.removeAttribute('src');
           if (data.qr_code) code.value = data.qr_code; else code.value = '';
           if (data.ticket_url) { link.href = data.ticket_url; link.classList.remove('hidden'); } else { link.href = '#'; link.classList.add('hidden'); }
-          area.classList.remove('hidden');
-          area.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch (e) {
-          console.error('Pix create error', e);
-          alert('Erro ao gerar QR Pix.');
+          const pixArea = document.getElementById('pix-qr-area');
+          pixArea.classList.remove('hidden');
+          pixArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (data.id) { showProcessing('Aguardando confirmação do Pix…'); pollPaymentStatus(data.id); }
+        } catch(e){
+          console.error('Pix error', e);
+          alert('Erro ao gerar Pix.');
         }
       }
 
@@ -813,16 +840,17 @@
           };
           const resp = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
           const data = await resp.json();
-          if (!resp.ok) { alert('Erro ao gerar boleto.'); return; }
-          const area = document.getElementById('boleto-area');
-          const code = document.getElementById('boleto-barcode');
-          const link = document.getElementById('boleto-link');
-          if (data.barcode) code.value = data.barcode; else code.value = '';
-          if (data.ticket_url) { link.href = data.ticket_url; link.classList.remove('hidden'); } else { link.href = '#'; link.classList.add('hidden'); }
-          area.classList.remove('hidden');
-          area.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch (e) {
-          console.error('Boleto create error', e);
+          if (!resp.ok) throw new Error(data?.message || 'Falha ao gerar boleto');
+          const boletoArea = document.getElementById('boleto-area');
+          const boletoLine = document.getElementById('boleto-barcode');
+          const boletoLink = document.getElementById('boleto-link');
+          if (data.barcode) boletoLine.value = data.barcode; else boletoLine.value = '';
+          if (data.ticket_url) { boletoLink.href = data.ticket_url; boletoLink.classList.remove('hidden'); } else { boletoLink.href = '#'; boletoLink.classList.add('hidden'); }
+          boletoArea.classList.remove('hidden');
+          boletoArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (data.id) { showProcessing('Aguardando compensação do boleto…'); pollPaymentStatus(data.id); }
+        } catch(e){
+          console.error('Boleto error', e);
           alert('Erro ao gerar boleto.');
         }
       }
@@ -845,7 +873,9 @@
           try {
             if (!cardBrickController) await initCardBrick();
             if (cardBrickController) {
-              await cardBrickController.submit();
+              if (cardBrickController && typeof cardBrickController.submit === 'function') {
+                await cardBrickController.submit();
+              }
               return;
             }
             alert('Preparei o pagamento com cartão. Tente novamente.');
